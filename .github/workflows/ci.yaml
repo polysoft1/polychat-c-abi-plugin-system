@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Leverage Cache
+        uses: Swatinem/rust-cache@v1
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
         with:
