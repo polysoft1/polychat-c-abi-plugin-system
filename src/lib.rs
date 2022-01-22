@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 use libc::c_void;
 
-type Account = *mut c_void;
+pub type Account = *mut c_void;
 
 extern "C" {
 	fn create_account() -> Account;
