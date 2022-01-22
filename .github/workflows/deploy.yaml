@@ -1,13 +1,12 @@
 name: CI Validation
 on:
-  - push
+  push:
+    branches:
+      - main
 
 jobs:
-  build_test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  deploy:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -17,16 +16,12 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - name: Build Library
+      - name: Build for Release
         uses: actions-rs/cargo@v1
         with:
           command: build
-      - name: Run Unit Tests
+          args: --release
+      - name: Deploy
         uses: actions-rs/cargo@v1
         with:
-          command: test
-      - name: Publish Header
-        uses: actions/upload-artifact@v2
-        if: matrix.os == 'ubuntu-latest'
-        with:
-          path: target/polychat_plugin.h
+          command: publish
