@@ -22,6 +22,8 @@ jobs:
           command: build
           args: --release
       - name: Deploy
+        env:
+          SKIP_CBINDGEN: "1"
         uses: actions-rs/cargo@v1
         with:
           command: publish
