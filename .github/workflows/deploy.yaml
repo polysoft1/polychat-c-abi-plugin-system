@@ -10,12 +10,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Leverage Cache
-        uses: Swatinem/rust-cache@v1
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Leverage Cache
+        uses: Swatinem/rust-cache@v1
       - name: Build for Release
         uses: actions-rs/cargo@v1
         with:
@@ -26,4 +26,4 @@ jobs:
           SKIP_CBINDGEN: "1"
         uses: actions-rs/cargo@v1
         with:
-          command: publish
+          command: publish 
