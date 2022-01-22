@@ -1,4 +1,4 @@
-name: CI Validation
+name: Deploy Crate
 on:
   push:
     branches:
