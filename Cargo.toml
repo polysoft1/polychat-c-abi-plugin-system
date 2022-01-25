@@ -1,6 +1,6 @@
 [package]
 name = "polychat-plugin"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2018"
 
 description = "A library containing types required to make a polychat plugin"
@@ -10,7 +10,7 @@ repository = "https://github.com/polysoft1/polychat-plugin"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-crate_type = ["dylib"]
+crate_type = ["dylib", "rlib"]
 
 [dependencies]
 libc = "0.2.113"
