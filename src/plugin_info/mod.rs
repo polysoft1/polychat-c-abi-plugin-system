@@ -1,13 +1,11 @@
+pub mod api_version;
+
 use crate::types::*;
+use api_version::APIVersion;
 
 use std::option::Option;
 
-#[repr(C)]
-pub struct APIVersion {
-    pub major: i32,
-    pub minor: i32,
-    pub patch: i32
-}
+
 
 #[repr(C)]
 pub struct PluginInfo {
@@ -18,7 +16,7 @@ pub struct PluginInfo {
 }
 
 impl PluginInfo {
-    fn new() -> PluginInfo {
+    pub fn new() -> PluginInfo {
         PluginInfo {
             supported_api: APIVersion {
                 major: -1,
