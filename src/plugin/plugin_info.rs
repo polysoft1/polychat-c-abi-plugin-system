@@ -1,11 +1,7 @@
-pub mod api_version;
-
 use crate::types::*;
-use api_version::APIVersion;
+use super::api_version::APIVersion;
 
 use std::option::Option;
-
-
 
 #[repr(C)]
 pub struct PluginInfo {
@@ -13,6 +9,7 @@ pub struct PluginInfo {
 
     pub create_account: Option<extern fn() -> Account>,
     pub destroy_account: Option<extern fn(acc: Account)>,
+    pub print: Option<extern fn(acc: Account)>
 }
 
 impl PluginInfo {
@@ -24,11 +21,8 @@ impl PluginInfo {
                 patch: 0
             },
             create_account: None,
-            destroy_account: None
+            destroy_account: None,
+            print: None
         }
     }
-}
-
-extern "C" {
-    fn initialize(thing: *mut PluginInfo);
 }
