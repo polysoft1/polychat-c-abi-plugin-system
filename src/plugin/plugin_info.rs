@@ -1,5 +1,6 @@
 use crate::types::*;
 use super::api_version::APIVersion;
+use super::message::Message;
 
 use std::option::Option;
 
@@ -9,6 +10,11 @@ pub struct PluginInfo {
 
     pub create_account: Option<extern fn() -> Account>,
     pub destroy_account: Option<extern fn(acc: Account)>,
+    /// Instructs the plugin to post a message in the associated channel.
+    /// The lifetime of msg is only guaranteed during the function call.
+    /// To keep the message for longer (likely required), make a copy.
+    /// TODO: Success or failure indication.
+    pub post_message: Option<extern fn(msg: * const Message)>,
     pub print: Option<extern fn(acc: Account)>
 }
 
@@ -22,6 +28,7 @@ impl PluginInfo {
             },
             create_account: None,
             destroy_account: None,
+            post_message: None,
             print: None
         }
     }
