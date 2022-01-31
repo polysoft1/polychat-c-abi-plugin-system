@@ -1,4 +1,4 @@
-use super::{PluginInfo, APIVersion, Message};
+use super::{PluginInfo, APIVersion, Message, SendStatus};
 use crate::types::Account;
 
 #[derive(Debug)]
@@ -7,7 +7,7 @@ pub struct InitializedPlugin {
 
     pub create_account: extern fn() -> Account,
     pub destroy_account: extern fn(acc: Account),
-    pub post_message: extern fn(msg: * const Message),
+    pub post_message: extern fn(msg: * const Message) -> SendStatus,
     pub print: extern fn(acc: Account)
 }
 
