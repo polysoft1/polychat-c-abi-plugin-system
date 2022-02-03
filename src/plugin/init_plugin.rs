@@ -11,7 +11,7 @@ pub struct InitializedPlugin {
     pub destroy_account: extern fn(acc: Account),
     pub post_message: extern fn(msg: * const Message) -> SendStatus,
     pub print: extern fn(acc: Account),
-    pub get_name: extern fn() -> *const c_char
+    pub get_name: extern fn() -> *const c_char,
 }
 
 impl InitializedPlugin {
