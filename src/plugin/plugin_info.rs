@@ -4,10 +4,14 @@ use super::send_status::SendStatus;
 use super::message::Message;
 
 use std::option::Option;
+use std::ptr;
+
+use libc::c_char;
 
 #[repr(C)]
 pub struct PluginInfo {
     pub supported_api: APIVersion,
+    pub name: *const c_char,
 
     pub create_account: Option<extern fn() -> Account>,
     pub destroy_account: Option<extern fn(acc: Account)>,
@@ -16,7 +20,7 @@ pub struct PluginInfo {
     /// To keep the message for longer (likely required), make a copy.
     /// TODO: Add way to update future message status as it is done async.
     pub post_message: Option<extern fn(msg: * const Message) -> SendStatus>,
-    pub print: Option<extern fn(acc: Account)>
+    pub print: Option<extern fn(acc: Account)>,
 }
 
 impl PluginInfo {
@@ -30,7 +34,8 @@ impl PluginInfo {
             create_account: None,
             destroy_account: None,
             post_message: None,
-            print: None
+            print: None,
+            name: ptr::null(),
         }
     }
 }
