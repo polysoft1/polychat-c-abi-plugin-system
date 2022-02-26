@@ -2,11 +2,10 @@
 use super::{Team, CoreInterface};
 use crate::types::Account;
 
-use libc::c_void;
-use libc::c_char;
-use std::ffi:CString;
+use libc::{c_void, c_char};
+use std::ffi::CString;
 
-use log::{error};
+use log::error;
 
 
 /**
@@ -38,8 +37,8 @@ impl PolyChatApiV1 {
         let interface: Box<Box<dyn CoreInterface>> = unsafe { Box::from_raw(self.core as *mut _) };
         // Convert to rust string
         unsafe {
-            let rust_c_str = CString::from_raw(test_msg).into_string();
-            match (rust_c_str) {
+            let rust_c_str = CString::from_raw(test_msg as *mut c_char).into_string();
+            match rust_c_str {
                 Ok(string) => {
                     interface.test(string);
                 },
