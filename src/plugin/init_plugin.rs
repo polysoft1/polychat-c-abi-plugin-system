@@ -1,4 +1,5 @@
-use super::{PluginInfo, APIVersion, Message, SendStatus};
+use super::{PluginInfo, APIVersion, Message, SendStatus, AuthMethod,
+    AuthResult, Conversation};
 use crate::types::Account;
 
 use libc::c_char;
@@ -8,10 +9,15 @@ use std::ffi::CString;
 pub struct InitializedPlugin {
     pub supported_api: APIVersion,
     pub name: String,
+    pub protocol_name: String,
+    pub auth_methods: *const AuthMethod,
 
     pub create_account: extern fn() -> Account,
     pub destroy_account: extern fn(acc: Account),
-    pub post_message: extern fn(msg: * const Message) -> SendStatus,
+    pub post_message: extern fn(acc: Account, msg: * const Message) -> SendStatus,
+    pub login: extern fn(acc: Account, * const AuthMethod, * const c_char) -> AuthResult,
+    pub request_messages: extern fn(acc: Account, conv: Conversation,
+        timestamp: u64, limit: u32),
     pub print: extern fn(acc: Account),
 }
 
@@ -30,6 +36,7 @@ impl InitializedPlugin {
         }
 
         let name: String;
+        let protocol_name: String;
         unsafe {
             let name_res = CString::from_raw(plugin.name as *mut c_char).into_string();
             if name_res.is_err() {
@@ -37,15 +44,26 @@ impl InitializedPlugin {
             }
 
             name = name_res.unwrap();
+
+            let protocol_name_res = CString::from_raw(plugin.protocol_name as *mut c_char).into_string();
+            if protocol_name_res.is_err() {
+                return Err("Could not decode plugin protocol name".to_string());
+            }
+
+            protocol_name = protocol_name_res.unwrap();
         }
 
         Ok(InitializedPlugin {
             supported_api: plugin.supported_api,
             create_account: plugin.create_account.unwrap(),
             destroy_account: plugin.destroy_account.unwrap(),
+            login: plugin.login.unwrap(),
+            request_messages: plugin.request_messages.unwrap(),
             post_message: plugin.post_message.unwrap(),
             print: plugin.print.unwrap(),
-            name,
+            name: name,
+            protocol_name: protocol_name,
+            auth_methods: plugin.auth_methods
         })
     }
 }
