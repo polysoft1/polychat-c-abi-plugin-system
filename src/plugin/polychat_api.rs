@@ -22,7 +22,7 @@ pub struct PolyChatApiV1 {
     core: *mut c_void, // Hidden *mut Box<dyn CoreInterface>,
     // TODO: Eventually add fields identifying info about core
     //get_teams: Option<extern fn(&PolyChatApiV1, acc: Account) -> *mut Team>,
-    test: Option<extern fn(&PolyChatApiV1, test_msg: *const c_char)>,
+    pub test: Option<extern fn(&PolyChatApiV1, test_msg: *const c_char)>,
 }
 
 impl PolyChatApiV1 {
