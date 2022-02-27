@@ -3,7 +3,12 @@ use super::{Team, CoreInterface};
 use crate::types::Account;
 
 use libc::{c_void, c_char};
-use std::ffi::CString;
+use std::{
+    ffi::CString,
+    fmt::Debug,
+    fmt::Result,
+    fmt::Formatter
+};
 
 use log::error;
 
@@ -21,9 +26,9 @@ pub struct PolyChatApiV1 {
 }
 
 impl PolyChatApiV1 {
-    pub fn new(core: Box<Box<dyn CoreInterface>>) -> PolyChatApiV1 {
+    pub fn new(core: *mut &Box<dyn CoreInterface>) -> PolyChatApiV1 {
         PolyChatApiV1 {
-            core: Box::into_raw(core) as *mut c_void,
+            core: core as *mut c_void,
             //get_teams: Some(PolyChatApiV1::get_teams_impl)
             test: Some(PolyChatApiV1::test_impl)
         }
@@ -48,5 +53,12 @@ impl PolyChatApiV1 {
                 }
             };
         }
+    }
+}
+
+impl Debug for PolyChatApiV1 {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        f.debug_tuple("")
+            .finish()
     }
 }
