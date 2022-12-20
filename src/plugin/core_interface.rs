@@ -10,5 +10,5 @@ pub trait CoreInterface {
         return ptr::null_mut();
     }*/
 
-    fn test(&self, testMsg: String) {}
+    fn test(&self, test_msg: String) {}
 }

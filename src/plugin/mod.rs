@@ -11,7 +11,7 @@ mod team;
 mod conversation;
 mod field;
 mod polychat_api;
-mod core_interface;
+pub mod core_interface;
 
 pub use plugin_info::PluginInfo;
 pub use init_plugin::InitializedPlugin;
