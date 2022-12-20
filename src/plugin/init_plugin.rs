@@ -4,13 +4,14 @@ use crate::types::Account;
 
 use libc::c_char;
 use std::ffi::CString;
+use log::debug;
 
 #[derive(Debug)]
 pub struct InitializedPlugin {
     pub supported_api: APIVersion,
     pub name: String,
     pub protocol_name: String,
-    pub auth_methods: *const AuthMethod,
+//    pub auth_methods: *const AuthMethod,
 
     pub create_account: extern fn() -> Account,
     pub destroy_account: extern fn(acc: Account),
@@ -23,6 +24,8 @@ pub struct InitializedPlugin {
 
 impl InitializedPlugin {
     pub fn new(plugin: &PluginInfo) -> Result<InitializedPlugin, String> {
+        debug!("Verifying functions exists");
+        //TODO programatically check is_none/null for the fields
         if plugin.create_account.is_none() {
             return Err("create_account is not defined".to_string());
         } else if plugin.destroy_account.is_none() {
@@ -33,24 +36,36 @@ impl InitializedPlugin {
             return Err("print is not defined".to_string());
         } else if plugin.name.is_null() {
             return Err("name is not defined".to_string());
+        } else if plugin.protocol_name.is_null() {
+            return Err("protocol_name is not defined".to_string());
+        } else if plugin.request_messages.is_none() {
+            return Err("request_messages is undefined".to_string());
+        } else if plugin.login.is_none() {
+            return Err("login is undefined".to_string());
         }
+
+        debug!("Functions do exists");
 
         let name: String;
         let protocol_name: String;
         unsafe {
+            debug!("Reading plugin name");
             let name_res = CString::from_raw(plugin.name as *mut c_char).into_string();
             if name_res.is_err() {
                 return Err("Could not decode plugin name".to_string());
             }
 
             name = name_res.unwrap();
-
+            debug!("Got plugin name as {}", name);
+            
+            debug!("Trying to read protocol name");
             let protocol_name_res = CString::from_raw(plugin.protocol_name as *mut c_char).into_string();
             if protocol_name_res.is_err() {
                 return Err("Could not decode plugin protocol name".to_string());
             }
 
             protocol_name = protocol_name_res.unwrap();
+            debug!("Got protocol name as {}", protocol_name);
         }
 
         Ok(InitializedPlugin {
@@ -63,7 +78,7 @@ impl InitializedPlugin {
             print: plugin.print.unwrap(),
             name: name,
             protocol_name: protocol_name,
-            auth_methods: plugin.auth_methods
+//            auth_methods: plugin.auth_methods
         })
     }
 }
