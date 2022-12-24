@@ -1,6 +1,5 @@
 
-use super::{Team, CoreInterface};
-use crate::types::Account;
+use super::CoreInterface;
 
 use libc::{c_void, c_char};
 use std::{

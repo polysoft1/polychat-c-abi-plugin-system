@@ -1,8 +1,3 @@
-use super::{Team};
-use crate::types::Account;
-
-use std::ptr;
-
 pub trait CoreInterface {
     // Note: All functions must have self reference to allow
     // this trait to be made into an object.
@@ -10,5 +5,5 @@ pub trait CoreInterface {
         return ptr::null_mut();
     }*/
 
-    fn test(&self, test_msg: String) {}
+    fn test(&self, _test_msg: String) {}
 }
